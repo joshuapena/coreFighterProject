@@ -5,9 +5,13 @@ var start = function(paramsOne, controlOptionsOne, paramsTwo, controlOptionsTwo)
 	document.getElementById("instructions").style.display = "inline";
 	document.getElementById("startButton").style.display = "none";
     document.getElementById("instructionsChoose").style.display = "none";
+    document.getElementById("instructionsChooseTwo").style.display = "none";
     document.getElementById("sexUndo").style.display = "none";
+    document.getElementById("sexUndoTwo").style.display = "none";
     document.getElementById("ethnicityUndo").style.display = "none";
+    document.getElementById("ethnicityUndoTwo").style.display = "none";
     document.getElementById("majorUndo").style.display = "none";
+    document.getElementById("majorUndoTwo").style.display = "none";
     document.getElementById("controllerPrompt").style.display = "none";
     document.getElementById("controllerPromptTwo").style.display = "none";
 	
@@ -24,12 +28,17 @@ function initGame() {
 	var spriteLoader = new SpriteLoader();
 	var sprites = {};
 	var spriteNames = [];
-	for (var i = 1; i < 9; i++) {
+	for (var i = 1; i < 10; i++) {
 		spriteNames.push("connor/connorL" + i);
 		spriteNames.push("connor/connorR" + i);
         spriteNames.push("evilConnor/evilConnorL" + i);
         spriteNames.push("evilConnor/evilConnorR" + i);
+        spriteNames.push("alien/alienL" + i);
+        spriteNames.push("alien/alienR" + i);
 	}
+    for (var i = 1; i < 9; i++) {
+        spriteNames.push("evilBullet/evilBullet" + i);
+    }
 	spriteLoader.load("./assets/images", spriteNames, ".png", function (loadedSprites) {
 		for (var spriteName in loadedSprites) {
 			sprites[spriteName] = loadedSprites[spriteName];

@@ -14,6 +14,8 @@ var Player = function(world, Bullet, audio, controlOptions, options) {
 	this.jumpRightAnimation = new SpriteAnimation(this.sprite + "/" + this.sprite + "R", 1, 6, 32);
     this.blockLeftAnimation = new SpriteAnimation(this.sprite + "/" + this.sprite + "L", 2, 7, 32);
     this.blockRightAnimation = new SpriteAnimation(this.sprite + "/" + this.sprite + "R", 2, 7, 32);
+    this.punchLeftAnimation = new SpriteAnimation(this.sprite + "/" + this.sprite + "L", 1, 9, 32);
+    this.punchRightAnimation = new SpriteAnimation(this.sprite + "/" + this.sprite + "R", 1, 9, 32);
 	this.width = 20;
 	this.height = 38;
 	this.x = options.x || this.world.width / 2;
@@ -34,7 +36,7 @@ var Player = function(world, Bullet, audio, controlOptions, options) {
     this.bullet = Bullet;
 	this.type = options.type || "player";
 	this.friction = 0.8;
-	this.gravity = 0.3;
+	this.gravity = 0.3 * 2;
 	this.state = this.idleRightAnimation;
 	this.jumpAudio = "jumpFins";
 	this.active = true;
@@ -43,8 +45,8 @@ var Player = function(world, Bullet, audio, controlOptions, options) {
 	this.hitboxMetrics = {
 		x: 0,
 		y: 0,
-		width: 20,
-		height: 38
+		width: this.width,
+		height: this.height
 	};
 	
 	this.hitbox = {
@@ -113,13 +115,13 @@ Player.prototype.update = function() {
 		if (!this.jumping) {
 			this.jumping = true;
 			this.jumpDown = false;
-			this.velY = -this.speed * 2;
+			this.velY = -this.speed * 2 * 2;
 		}
 	}
 	
 	// Right
 	if (!this.action && 0.5 < this.controller.xAxis) {
-		if (this.velX < this.speed) {
+		if (this.velX < this.speed * 3) {
 			this.velX++;
 			this.direction = "right";
 		}
@@ -127,7 +129,7 @@ Player.prototype.update = function() {
 	
 	// Left
 	if (!this.action && this.controller.xAxis < -0.5) {
-		if (this.velX > -this.speed) {
+		if (this.velX > -this.speed * 3) {
 			this.velX--;
 			this.direction = "left";
 		}
@@ -197,6 +199,12 @@ Player.prototype.update = function() {
         } else {
             this.state = this.blockLeftAnimation;
         }
+    } else if (this.punching) {
+        if (this.direction === "right") {
+            this.state = this.punchRightAnimation;
+        } else {
+            this.state = this.punchLeftAnimation;
+        }
     } else if (this.shootLock) {
         if (this.direction === "right") {
             this.state = this.shootRightAnimation;
@@ -222,8 +230,11 @@ Player.prototype.update = function() {
 Player.prototype.draw = function() {
 	var that = this;
 	this.state.draw(this.x, this.y, function(spriteName, x, y) {
-		that.width = that.world.sprites[spriteName].width;
+		that.width =  3 * that.world.sprites[spriteName].width;
+		that.height = 3 * that.world.sprites[spriteName].height;
 		that.world.drawSprite(spriteName, x, y, that.width, that.height);
+        that.hitboxMetrics.width = that.width;
+        that.hitboxMetrics.height = that.height;
 	});
 
     this.myHealth.draw();
@@ -250,28 +261,23 @@ Player.prototype.shoot = function() {
             new this.bullet(this.world, {
                 x: this.midpoint().x,
                 y: this.midpoint().y - 3,
-                width: 6,
-                height: 6,
+                width: 6 * 3,
+                height: 6 * 3,
                 hitboxMetrics: {
                     x: 0,
                     y: 0,
-                    width: 6,
-                    height: 6
+                    width: 6 * 3,
+                    height: 6 * 3
                 },
                 angle: this.shootAngle,
-                speed: 20,
+                speed: 16,
                 acceleration: 0.2,
                 owner: this.type,
-                kill: this
+                kill: this,
+                spriteName : "evilBullet"
             }, this.audio
     ));
 };
 
-Player.prototype.block = function() {
-};
-
 Player.prototype.grab = function() {
-};
-
-Player.prototype.punch = function() {
 };

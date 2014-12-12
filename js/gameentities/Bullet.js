@@ -14,6 +14,10 @@ var Bullet = function(world, options, audio) {
 	this.angle = options.angle;
 	
 	this.spriteName = options.spriteName || null;
+    if (this.spriteName !== null) {
+        this.moveAnimation = new SpriteAnimation(this.spriteName + "/" + this.spriteName, 8, 1, 32);
+        console.log("evil bullet ready");
+    }
 	this.active = true;
 	
 	this.width = options.width;
@@ -89,11 +93,14 @@ Bullet.prototype.update = function () {
 };
 
 Bullet.prototype.draw = function () {
+    var that = this;
 	if (this.spriteName === null) {
 		this.world.drawRectangle(this.color, this.x, this.y, this.width, this.height);
 		//this.world.drawPolygon(this.color, this.lines, this.points);
 	} else {
-		this.world.drawSprite(this.spriteName, this.x, this.y, this.width, this.height);
+        this.moveAnimation.draw(this.x, this.y, function(spriteName, x, y) {
+            that.world.drawSprite(spriteName, x, y, that.width, that.height);
+        });
 	}
 };
 
