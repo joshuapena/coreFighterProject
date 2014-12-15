@@ -57,6 +57,7 @@ var update = function (game, audio) {
             hitStart : 1,
             hitEnd : 4,
             fireball : "fireball1",
+            jump : "jump1",
             sprite : "connor"
         }));
         game.world.addPlayer(new Player(game.world, Bullet, game.audio, game.controllerTwo, {
@@ -73,6 +74,7 @@ var update = function (game, audio) {
             hitStart : 4,
             hitEnd : 7,
             fireball : "fireball2",
+            jump : "jump2",
             sprite : "evilConnor"
         }));
 

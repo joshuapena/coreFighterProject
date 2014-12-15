@@ -39,6 +39,7 @@ var Game = function(canvas, sprites, audio, paramsOne, controlOptionsOne, params
         hitStart : 1,
         hitEnd : 4,
         fireball : "fireball1",
+        jump : "jump1",
         sprite : "connor"
     }));
 	this.world.addPlayer(new Player(this.world, Bullet, this.audio, this.controllerTwo, {
@@ -55,6 +56,7 @@ var Game = function(canvas, sprites, audio, paramsOne, controlOptionsOne, params
         hitStart : 4,
         hitEnd : 7,
         fireball : "fireball2",
+        jump : "jump2",
         sprite : "evilConnor"
     }));
 	

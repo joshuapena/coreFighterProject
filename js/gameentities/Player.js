@@ -38,7 +38,6 @@ var Player = function(world, Bullet, audio, controlOptions, options) {
 	this.friction = 0.8;
 	this.gravity = 0.3 * 2;
 	this.state = this.idleRightAnimation;
-	this.jumpAudio = "jumpFins";
 	this.active = true;
 	this.hit = false;
 
@@ -49,6 +48,7 @@ var Player = function(world, Bullet, audio, controlOptions, options) {
     this.shield = this.audio[options.shield];
     this.hitStart = options.hitStart;
     this.hitEnd = options.hitEnd;
+    this.jump = this.audio[options.jump];
 
 	this.hitboxMetrics = {
 		x: 0,
@@ -124,6 +124,7 @@ Player.prototype.update = function() {
 	// Jump
 	if (!this.action && this.controller.yAxis < -0.5) {
 		if (!this.jumping) {
+            this.jump.play();
 			this.jumping = true;
 			this.jumpDown = false;
 			this.velY = -this.speed * 2 * 2;
