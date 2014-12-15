@@ -11,6 +11,9 @@ var test = true;
 var spawn = true;
 
 var playerReset = [false, false];
+var resetInital = true;
+
+var soundPlayed = false;
 
 var update = function (game, audio) {
     // Calls the update function for all objects
@@ -35,6 +38,7 @@ var update = function (game, audio) {
     }
 
     if (playerReset[0] && playerReset[1]) {
+        soundPlayed = false;
         console.log("reseting . . .");
         game.world.players.forEach(function(player) {
             player.active = false;
@@ -47,6 +51,8 @@ var update = function (game, audio) {
             healthX : 50,
             percent : game.paramsOne.percent,
             result : game.paramsOne.result,
+            walking : "walking1",
+            shield : "shield1",
             sprite : "connor"
         }));
         game.world.addPlayer(new Player(game.world, Bullet, game.audio, game.controllerTwo, {
@@ -57,6 +63,8 @@ var update = function (game, audio) {
             healthX : 350,
             percent : game.paramsTwo.percent,
             result : game.paramsTwo.result,
+            walking : "walking2",
+            shield : "shield2",
             sprite : "evilConnor"
         }));
 
@@ -65,6 +73,19 @@ var update = function (game, audio) {
         for (var i = 0; i < playerReset.length; i++) {
             playerReset[i] = false;
         };
+        game.audio["reset1"].setVolume(80);
+        game.audio["reset1"].play();
+        /*
+        if (game.audio["reset1"].isEnded() && game.audio["reset2"].isEnded()) {
+            if (resetInital) {
+                game.audio["reset1"].play();
+                resetTime = false;
+            } else {
+                game.audio["reset2"].play();
+                resetTime = true;
+            }
+        }
+        */
     }
 
     game.world.players.forEach( function(player) {
@@ -91,7 +112,14 @@ var update = function (game, audio) {
     if (playerEnd === true) {
         game.world.end = true;
     } else if (game.world.players.length < 2) {
-       game.world.died = true; 
+        game.world.died = true; 
+        if (!soundPlayed) {
+            //buzz.all().setVolume(10);
+            game.audio["gameover"].setVolume(100);
+            game.audio["gameover"].play();
+            //buzz.all().setVolume(20);
+            soundPlayed = true;
+        }
     } else if (spawn) {
         // The floor
         game.world.platforms.push (new Platform(game.world, {

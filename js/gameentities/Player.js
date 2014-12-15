@@ -41,7 +41,15 @@ var Player = function(world, Bullet, audio, controlOptions, options) {
 	this.jumpAudio = "jumpFins";
 	this.active = true;
 	this.hit = false;
-	
+
+    // Sounds
+    this.fireball = this.audio[options.fireball];
+    this.punch = this.audio[options.punch];
+    this.walking = this.audio[options.walking];
+    this.shield = this.audio[options.shield];
+    this.hitStart = options.hitStart;
+    this.hitEnd = options.hitEnd;
+
 	this.hitboxMetrics = {
 		x: 0,
 		y: 0,
@@ -71,11 +79,11 @@ var Player = function(world, Bullet, audio, controlOptions, options) {
 
 Player.prototype.explode = function(damage, object) {
     var that = this;
-    if (this.punching) {
-    }
     if (!this.hit) {
         if (object) {
             if (!this.blocking || object.punching) {
+                this.audio["hit" + (Math.floor(Math.random() * (this.hitEnd - this.hitStart)) + this.hitStart)].play();
+
                 this.lives -= damage;
                 this.hit = true;
                 var hitTimeOut = setTimeout(function() {
@@ -85,6 +93,8 @@ Player.prototype.explode = function(damage, object) {
             }
         } else {
             if (!this.blocking) {
+                this.audio["hit" + (Math.floor(Math.random() * (this.hitEnd - this.hitStart)) + this.hitStart)].play();
+
                 this.lives -= damage;
                 this.hit = true;
                 var hitTimeOut = setTimeout(function() {
@@ -158,9 +168,11 @@ Player.prototype.update = function() {
             this.controller.buttonB) {
         this.action = true;
         this.blocking = true;
+        this.audio["shield2"].play();
     } else if (!this.shootLock && !this.blocking &&
             this.controller.buttonX) {
         this.punching = true;
+        this.punch.play();
     } else {
         this.blocking = false;
         this.punching = false;
@@ -187,7 +199,7 @@ Player.prototype.update = function() {
 		this.y = this.world.height - this.height;
 		this.jumping = false;
 	}
-	
+
 	if (this.jumping) {
 		if (this.direction === "right") {
 			this.state = this.jumpRightAnimation;
@@ -223,6 +235,18 @@ Player.prototype.update = function() {
 			this.state = this.idleLeftAnimation;
 		}
 	}
+
+    if ((this.controller.xAxis < -0.5 || 0.5 < this.controller.xAxis) && !this.jumping) {
+        this.walking.play();
+    } else {
+        this.walking.pause();
+    }
+
+    if (this.blocking) {
+        this.shield.play();
+    } else {
+        this.shield.pause();
+    }
 	
 	this.updateHitbox();
     this.myHealth.update(this.lives);
@@ -258,6 +282,8 @@ Player.prototype.updateHitbox = function() {
 };
 
 Player.prototype.shoot = function() {
+    this.fireball.stop();
+    this.fireball.play();
     this.world.bullets.push (
             new this.bullet(this.world, {
                 x: this.midpoint().x,
