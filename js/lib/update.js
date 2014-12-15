@@ -53,6 +53,10 @@ var update = function (game, audio) {
             result : game.paramsOne.result,
             walking : "walking1",
             shield : "shield1",
+            punch : "punch1",
+            hitStart : 1,
+            hitEnd : 4,
+            fireball : "fireball1",
             sprite : "connor"
         }));
         game.world.addPlayer(new Player(game.world, Bullet, game.audio, game.controllerTwo, {
@@ -65,6 +69,10 @@ var update = function (game, audio) {
             result : game.paramsTwo.result,
             walking : "walking2",
             shield : "shield2",
+            punch : "punch2",
+            hitStart : 4,
+            hitEnd : 7,
+            fireball : "fireball2",
             sprite : "evilConnor"
         }));
 
