@@ -49,6 +49,7 @@ var Player = function(world, Bullet, audio, controlOptions, options) {
     this.hitStart = options.hitStart;
     this.hitEnd = options.hitEnd;
     this.jump = this.audio[options.jump];
+    this.jump.setVolume(80);
 
 	this.hitboxMetrics = {
 		x: 0,
